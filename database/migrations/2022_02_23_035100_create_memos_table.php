@@ -19,8 +19,8 @@ class CreateMemosTable extends Migration
             $table->integer('user_id');
             $table->integer('status')->default('1');
             $table->timestamps();
-            // $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
-            // $table->timestamp('created_at')->default(DB::rar('CURRENT_TIMESTAMP'));
+            // $table->timestamp('updated_at')->default('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'); // (DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
+            // $table->timestamp('created_at')->default('CURRENT_TIMESTAMP'); // (DB::rar('CURRENT_TIMESTAMP'));
         });
     }
 
