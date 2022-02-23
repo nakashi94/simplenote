@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Memo;
+use App\Tag;
 
 class HomeController extends Controller
 {
@@ -42,9 +43,13 @@ class HomeController extends Controller
         // dd($data);
         // POSTされたデータをDB（memosテーブル）に挿入
         // MEMOモデルにDBへ保存する命令を出す
+
+        $tag_id = Tag::insertGetId(['name' => $data['tag'], 'user_id' => $data['user_id']]);
+
         $memo_id = Memo::insertGetId([
             'content' => $data['content'],
             'user_id' => $data['user_id'],
+            'tag_id' => $tag_id,
             'status' => 1
         ]);
 
@@ -57,9 +62,16 @@ class HomeController extends Controller
         // 該当するIDのメモをデータベースから取得
         $user = \Auth::user();
         $memo = Memo::where('status', 1)->where('id', $id)->where('user_id', $user['id'])->first();
-        // dd($memo);
         $memos = Memo::where('user_id', $user['id'])->where('status', 1)->orderBy('updated_at', 'DESC')->get();
         //取得したメモをViewに渡す
-        return view('edit', compact('memo', 'user', 'memos'));
+        $tags = Tag::where('user_id', $user['id'])->get();
+        return view('edit', compact('memo', 'user', 'memos', 'tags'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $inputs = $request->all();
+        Memo::where('id', $id)->update(['content' => $inputs['content'], 'tag_id' => $inputs['tag_id']]);
+        return redirect()->route('home');
     }
 }
